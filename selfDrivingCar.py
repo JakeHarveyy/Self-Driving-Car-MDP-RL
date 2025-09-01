@@ -1,5 +1,13 @@
-states = {'Clear Road', 'Veichle Ahead', 'Pedestrian Crossing', 'In School Zone', 'Obstacle Ahead', 'Traffic Light Red', 'Traffic Light Green', 'Destination Reached', 'Acident'}
-actions = {'Maintain Speed', 'Accelerate', 'Decelerate', 'Stop', 'Change Lane', 'Steer Around'}
+from MDP import MDP
+from policyIteration import policyIteration
+from valueIteration import valueIteration
+
+"""
+Environment setup
+"""
+
+states = ['Clear Road', 'Veichle Ahead', 'Pedestrian Crossing', 'In School Zone', 'Obstacle Ahead', 'Traffic Light Red', 'Traffic Light Green', 'Destination Reached', 'Acident']
+actions = ['Maintain Speed', 'Accelerate', 'Decelerate', 'Stop', 'Change Lane', 'Steer Around']
 
 
 #R(s,a)
@@ -13,8 +21,8 @@ reward_matrix = [              # Rows:
     [-100, -100, 5, 5, 10, 10], # Obstacle Ahead
     [-50, -50, 5, 10, -10, -10], # Traffic Light Red
     [10, 5, -5, -10, 1, -10], # Traffic Light Green
-    [0, 0, 0, 0, 0, 0], # Destination Reached (terminal)
-    [0, 0, 0, 0, 0, 0]  # Accident (terminal)
+    [100, 100, 100, 100, 100, 100], # Destination Reached (terminal) - HIGH POSITIVE REWARD
+    [-100, -100, -100, -100, -100, -100]  # Accident (terminal) - HIGH NEGATIVE REWARD
 ]
 
 #R(s'|s a)
@@ -94,3 +102,41 @@ transition_matrix = [
         [0,0,0,0,0,0,0,0,1], [0,0,0,0,0,0,0,0,1], [0,0,0,0,0,0,0,0,1]
     ]
 ]
+
+"""
+MDP instance
+"""
+
+#create MDP instance
+selfDrivingCarMDP = MDP(states, actions, transition_matrix, reward_matrix)
+
+# Convert matices and actions to dictionary 
+transition_matrix, reward_matrix, actions = selfDrivingCarMDP.convert_to_dictionary()
+
+"""
+Dynamic Programming algorithms with Visual Comparison
+"""
+
+from visualComparison import visual_algorithm_comparison
+from plotDescription import describe_plots
+
+# Run visual algorithm comparison
+print("SELF-DRIVING CAR MDP: VISUAL ALGORITHM ANALYSIS")
+print("=" * 60)
+
+results = visual_algorithm_comparison(
+    states=selfDrivingCarMDP.states,
+    actions=actions,
+    transition_matrix=transition_matrix,
+    reward_matrix=reward_matrix,
+    start_state='Clear Road',
+    gamma=0.9,
+    theta=1e-3,
+    save_plots=True  # Set to True to save plots as files
+)
+
+print("\nVisual comparison complete!")
+print("Three plots have been saved:")
+print("   • value_evolution.png")
+print("   • convergence_comparison.png") 
+print("   • final_values_comparison.png")

@@ -1,10 +1,12 @@
+from MDP import MDP
+
 states = {'UT_H', 'UT_L', 'DT_H', 'DT_L', 'C_H', 'C_L', 'PS_H', 'PS_L', 'PD_H', 'PD_L'}
 actions = {'Buy', 'Hold', 'Sell'}
 
 #R(s,a)
 # rows represent current state, columns represent actions
 # Columns :'Buy', 'Hold', 'Sell']
-rewards_matrix = [
+reward_matrix = [
     # Buy, Hold, Sell
     [ -50,   25,   75],  # 0: UT_H (Upward Trend + High Volume)
     [ -25,   25,   50],  # 1: UT_L (Upward Trend + Low Volume)
@@ -83,3 +85,41 @@ transition_matrix = [
         [0.00, 0.00, 0.10, 0.15, 0.20, 0.15, 0.00, 0.00, 0.15, 0.25]   # Sell
     ]
 ]
+
+"""
+MDP instance
+"""
+
+#create MDP instance
+autoStockTraderMDP = MDP(states, actions, transition_matrix, reward_matrix)
+
+# Convert matices and actions to dictionary 
+transition_matrix, reward_matrix, actions = autoStockTraderMDP.convert_to_dictionary()
+
+"""
+Dynamic Programming algorithms with Visual Comparison
+"""
+
+from visualComparison import visual_algorithm_comparison
+from plotDescription import describe_plots
+
+# Run visual algorithm comparison
+print("SELF-DRIVING CAR MDP: VISUAL ALGORITHM ANALYSIS")
+print("=" * 60)
+
+results = visual_algorithm_comparison(
+    states=autoStockTraderMDP.states,
+    actions=actions,
+    transition_matrix=transition_matrix,
+    reward_matrix=reward_matrix,
+    start_state='Clear Road',
+    gamma=0.9,
+    theta=1e-3,
+    save_plots=True  # Set to True to save plots as files
+)
+
+print("\nVisual comparison complete!")
+print("Three plots have been saved:")
+print("   • value_evolution.png")
+print("   • convergence_comparison.png") 
+print("   • final_values_comparison.png")

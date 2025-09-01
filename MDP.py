@@ -40,9 +40,10 @@ class MDP:
                 transition_probs[s][a] = {}
                 for k, s_prime in enumerate(self.states):
                     # Set the transition probability for s' from the matrix
-                    transition_probs[s][a][s_prime] = self.transition_matrix[i][k]
+                    # transition_matrix[state][action][next_state]
+                    transition_probs[s][a][s_prime] = self.transition_matrix[i][j][k]
 
-                    # Set the reward for action a in state s from the matrix
-                    rewards[s][a] = self.reward_matrix[i][j]
+                # Set the reward for action a in state s from the matrix
+                rewards[s][a] = self.reward_matrix[i][j]
 
         return transition_probs, rewards, actions
